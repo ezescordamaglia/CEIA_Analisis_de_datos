@@ -17,7 +17,7 @@ def detectar_outliers(columna, umbral=3):
     z_scores = (columna - columna.mean()) / columna.std()
     outliers = np.abs(z_scores) > umbral
     porcentaje_outliers = outliers.sum() / len(columna)
-    return porcentaje_outliers > 0.01 
+    return outliers.sum(), porcentaje_outliers* 100
 
 def recomendar_imputacion_categorica(columna, causa_faltante):
     porcentaje_faltante = obtener_porcentaje_faltante(columna)
@@ -45,7 +45,7 @@ def recomendar_imputacion_numerica(columna, causa_faltante):
     porcentaje_faltante = obtener_porcentaje_faltante(columna)
     media = columna.mean()
     mediana = columna.median()
-    outliers = detectar_outliers(columna)
+    outliers, porcentaje_outliers = detectar_outliers(columna)
 
     print("Información de la columna:")
     print("Tipo de dato: Numérica")
@@ -54,7 +54,8 @@ def recomendar_imputacion_numerica(columna, causa_faltante):
     print("Mediana:", mediana)
     print("Maximo:", columna.max())
     print("Minimo:", columna.min())
-    print("¿Hay outliers?:", outliers)
+    print("¿Cantidad outliers?:", outliers)
+    print("¿Porcentaje outliers?:", porcentaje_outliers)
     print("Causa de los datos faltantes:", causa_faltante)
 
     if causa_faltante == "MAR":
